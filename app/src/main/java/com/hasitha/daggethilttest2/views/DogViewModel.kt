@@ -20,9 +20,8 @@ class DogViewModel @Inject constructor(
         get() = _dogData
 
     fun getDogInfo(){
-
         viewModelScope.launch {
-            val dogInfo = dogRepository.getDogDataFromDataSource()
+            val dogInfo = dogRepository.getDogInfo()
             _dogData.value = dogInfo
         }
     }

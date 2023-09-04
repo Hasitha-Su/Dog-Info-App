@@ -2,6 +2,7 @@ package com.hasitha.daggethilttest2.di
 
 import com.hasitha.daggethilttest2.constants.Constants.BASE_URL
 import com.hasitha.daggethilttest2.network.DogApiService
+import com.hasitha.daggethilttest2.network.DogDao
 //import com.hasitha.daggethilttest2.network.DogDao
 import com.hasitha.daggethilttest2.repository.DogRepository
 import dagger.Module
@@ -58,19 +59,15 @@ object NetworkModule {
         return retrofit.create(DogApiService::class.java)
     }
 
+//    @Singleton
+//    @Provides
+//    fun provideDogRepository(dogApiService: DogApiService): DogRepository {
+//        return DogRepository(dogApiService)
+//    }
 
     @Singleton
     @Provides
-    fun provideDogRepository(dogApiService: DogApiService): DogRepository {
-        return DogRepository(dogApiService)
+    fun provideDogRepository(dogApiService: DogApiService, dogDao: DogDao): DogRepository {
+        return DogRepository(dogApiService, dogDao)
     }
-
-
-//    @Singleton
-//    @Provides
-//    fun provideDogRepository(dogApiService: DogApiService, dogDao: DogDao): DogRepository {
-//        return DogRepository(dogApiService, dogDao)
-//    }
-
-
 }

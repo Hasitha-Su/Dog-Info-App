@@ -29,10 +29,11 @@ class MainActivity : AppCompatActivity() {
             viewModel.getDogInfo()
         }
 
-        viewModel.dogData.observe(this){
-            it?.let {
-                Glide.with(this).load(it.message).into(binding.imageView)
-            }
-        }
+//        viewModel.dogData.observe(this){
+//            it?.let {
+//                //Glide.with(this).load(it.message).into(binding.imageView)
+//
+//            }
+//        }
     }
 }
