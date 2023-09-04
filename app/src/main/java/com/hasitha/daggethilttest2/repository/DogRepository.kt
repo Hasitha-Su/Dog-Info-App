@@ -1,7 +1,9 @@
 package com.hasitha.daggethilttest2.repository
 
+import com.hasitha.daggethilttest2.model.Dog
 import com.hasitha.daggethilttest2.model.DogApiResponse
 import com.hasitha.daggethilttest2.network.DogApiService
+import com.hasitha.daggethilttest2.network.DogDao
 //import com.hasitha.daggethilttest2.network.DogDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -9,43 +11,8 @@ import javax.inject.Inject
 
 class DogRepository @Inject constructor(
     private val dogApiService: DogApiService,
-//    private val dogDao: DogDao
+    private val dogDao: DogDao
 ) {
-    /*
-    suspend fun getDogDataFromDataSource() {
-        val dogDataResponse = withContext(Dispatchers.IO) {
-            dogApiService.getRandomDog()
-        }
-
-        if (dogDataResponse.isSuccessful && dogDataResponse.body() != null) {
-            val apiResponse = dogDataResponse.body()!!
-            // Convert API model to database model
-            val dogData = Dog(
-                message = apiResponse.message,
-                status = apiResponse.status
-            )
-
-            withContext(Dispatchers.IO) {
-//                dogDao.insertDog(dogData)
-            }
-
-            //return dogData
-            return val dummyDog = Dog(
-                id = -1,  // Dummy ID
-                message = "No data available",
-                status = "Error"
-            )
-        } else {
-            //If data fetch failed, return data from local DB
-            return withContext(Dispatchers.IO) {
-                dogDao.getDog(1)
-
-            }
-        }
-    }
-}*/
-
-
     suspend fun getDogDataFromDataSource(): DogApiResponse? {
         return withContext(Dispatchers.IO) {
             return@withContext getDogFromRemoteService()
@@ -63,8 +30,35 @@ class DogRepository @Inject constructor(
         return dogData
     }
 
-    // From local db
-    /*
-    suspend fun getDogFromLocalDb() : Dog {
-    }*/
+    // Fetch dog from local database
+    suspend fun getDogFromLocalDb(): Dog? {
+        return dogDao.getDog(1) // Assuming 1 is the ID you want to fetch
+    }
+
+//    suspend fun getDogInfo(): DogApiResponse? {
+//        // First, try to fetch data from local DB
+//        getDogFromLocalDb()?.let { localDog ->
+//            return DogApiResponse(localDog.message, localDog.status)
+//        }
+//
+//        // If local DB doesn't have data, fetch from remote
+//        return getDogFromRemoteService()?.also { dogApiResponse ->
+//            dogDao.insertDog(Dog(message = dogApiResponse.message, status = dogApiResponse.status))
+//        }
+//    }
+    suspend fun getDogInfo(): DogApiResponse? {
+        // First, try to fetch data from remote
+        val remoteDog = getDogFromRemoteService()
+        if (remoteDog != null) {
+            // Save fetched data into local DB
+            dogDao.insertDog(Dog(message = remoteDog.message, status = remoteDog.status))
+            return remoteDog
+        }
+
+        // If remote doesn't have data, fetch from local DB
+        return getDogFromLocalDb()?.let { localDog ->
+            DogApiResponse(localDog.message, localDog.status)
+        }
+    }
+
 }

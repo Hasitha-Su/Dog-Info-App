@@ -10,25 +10,14 @@ import com.hasitha.daggethilttest2.model.Dog
 interface DogDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertDog(dog: Dog)
+    suspend fun insertDog(dog: Dog): Long
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllDogs(dogs: List<Dog>): Long
+//    @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    suspend fun insertAllDogs(dogs: List<Dog>): List<Long>
 
     @Query("SELECT * FROM dog_table WHERE id = :id")
-    fun getDog(id: Int): Dog
+    fun getDog(id: Int): Dog?
+
+//    @Query("SELECT * FROM dog_table LIMIT 1")
+//    suspend fun getDog(): Dog?
 }
-
-/*
-@Dao
-interface DogDao {
-    @Query("SELECT * FROM dog_table LIMIT 1")
-    suspend fun getDog(): Dog?
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertDog(dog: Dog)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAllDogs(dogs: List<Dog>)
-}
- */

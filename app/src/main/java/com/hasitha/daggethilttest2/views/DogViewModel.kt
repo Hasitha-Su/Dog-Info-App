@@ -19,11 +19,18 @@ class DogViewModel @Inject constructor(
     val dogData : LiveData<DogApiResponse>
         get() = _dogData
 
+//    fun getDogInfo(){
+//
+//        viewModelScope.launch {
+//            val dogInfo = dogRepository.getDogDataFromDataSource()
+//            _dogData.value = dogInfo
+//        }
+//    }
     fun getDogInfo(){
-
         viewModelScope.launch {
-            val dogInfo = dogRepository.getDogDataFromDataSource()
+            val dogInfo = dogRepository.getDogInfo()
             _dogData.value = dogInfo
         }
     }
+
 }
