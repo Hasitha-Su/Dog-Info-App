@@ -1,5 +1,6 @@
 package com.hasitha.daggethilttest2.views
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,11 +27,15 @@ class DogViewModel @Inject constructor(
 //            _dogData.value = dogInfo
 //        }
 //    }
-    fun getDogInfo(){
+
+    fun getDogInfo() {
         viewModelScope.launch {
-            val dogInfo = dogRepository.getDogInfo()
-            _dogData.value = dogInfo
+            try {
+                val dogInfo = dogRepository.getDogInfo()
+                _dogData.value = dogInfo
+            } catch (e: Exception) {
+                Log.e("DogViewModel", "Error getting dog info", e)
+            }
         }
     }
-
 }

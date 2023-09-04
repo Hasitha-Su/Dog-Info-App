@@ -12,11 +12,11 @@ interface DogDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDog(dog: Dog): Long
 
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    suspend fun insertAllDogs(dogs: List<Dog>): List<Long>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllDogs(dogs: List<Dog>): List<Long>
 
     @Query("SELECT * FROM dog_table WHERE id = :id")
-    fun getDog(id: Int): Dog?
+    suspend fun getDog(id: Int): Dog?
 
 //    @Query("SELECT * FROM dog_table LIMIT 1")
 //    suspend fun getDog(): Dog?
